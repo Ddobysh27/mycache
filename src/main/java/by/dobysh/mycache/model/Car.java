@@ -1,8 +1,19 @@
 package by.dobysh.mycache.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "cars")
 public class Car {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "year")
     private int year;
 
     public int getId() {
