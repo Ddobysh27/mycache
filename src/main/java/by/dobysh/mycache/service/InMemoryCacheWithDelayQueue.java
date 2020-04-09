@@ -20,19 +20,20 @@ import java.util.stream.Collectors;
 @Service
 public class InMemoryCacheWithDelayQueue implements Cache {
 
-    private final ConcurrentHashMap<String, SoftReference<Object>> cache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, SoftReference<Car>> cache = new ConcurrentHashMap<>();
 
     public List getCache() {
 
-        List<Object> list = new ArrayList<>(cache.values());
+        List<SoftReference<Car>> list = new ArrayList<>(cache.values());
+        List<Car> carsList = new ArrayList<>();
 //
-//        for (Object o: list
-//             ) {
-//            o.toString();
-//
-//        }
+        for (SoftReference<Car> softReference: list
+             ) {
+            carsList.add(softReference.get());
 
-        return list;
+        }
+
+        return carsList;
     }
 
     private final DelayQueue<DelayedCacheObject> cleaningUpQueue = new DelayQueue<>();
@@ -53,7 +54,7 @@ public class InMemoryCacheWithDelayQueue implements Cache {
     }
 
     @Override
-    public void add(String key, Object value, long periodInMillis) {
+    public void add(String key, Car value, long periodInMillis) {
         if (key == null) {
             return;
         }
@@ -61,7 +62,7 @@ public class InMemoryCacheWithDelayQueue implements Cache {
             cache.remove(key);
         } else {
             long expiryTime = System.currentTimeMillis() + periodInMillis;
-            SoftReference<Object> reference = new SoftReference<>(value);
+            SoftReference<Car> reference = new SoftReference<>(value);
             cache.put(key, reference);
             cleaningUpQueue.put(new DelayedCacheObject(key, reference, expiryTime));
         }
@@ -73,7 +74,7 @@ public class InMemoryCacheWithDelayQueue implements Cache {
     }
 
     @Override
-    public Object get(String key) {
+    public Car get(String key) {
         return Optional.ofNullable(cache.get(key)).map(SoftReference::get).orElse(null);
     }
 
@@ -94,7 +95,7 @@ public class InMemoryCacheWithDelayQueue implements Cache {
         @Getter
         private final String key;
         @Getter
-        private final SoftReference<Object> reference;
+        private final SoftReference<Car> reference;
         private final long expiryTime;
 
         @Override

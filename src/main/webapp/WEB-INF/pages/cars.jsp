@@ -35,7 +35,7 @@
     </c:forEach>
 </table>
 
-<h2>Add</h2>
+<%--<h2>Add</h2>--%>
 <c:url value="/add" var="add"/>
 <a href="${add}">Add new car</a>
 
@@ -52,7 +52,7 @@
 
 
 
-<h1>Список cars в кэше</h1>
+<h3>Список cars в кэше</h3>
 
 <table>
     <tr>
@@ -62,10 +62,10 @@
     </tr>
     <c:forEach var="car" items="${cacheCarsList}">
         <tr>
-            <td>${car}</td>
-<%--            <td>${car.id}</td>--%>
-<%--            <td>${car.title}</td>--%>
-<%--            <td>${car.year}</td>--%>
+<%--            <td>${car}</td>--%>
+           <td>${car.id}</td>
+           <td>${car.title}</td>
+           <td>${car.year}</td>
         </tr>
     </c:forEach>
 </table>

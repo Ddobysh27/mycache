@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class InMemoryCache implements Cache {
+public class InMemoryCache { // implements Cache {
 
     private static final int CLEAN_UP_PERIOD_IN_SEC = 60;
 
@@ -30,7 +30,6 @@ public class InMemoryCache implements Cache {
         cleanerThread.start();
     }
 
-    @Override
     public void add(String key, Object value, long periodInMillis) {
         if (key == null) {
             return;
@@ -43,22 +42,18 @@ public class InMemoryCache implements Cache {
         }
     }
 
-    @Override
     public void remove(String key) {
         cache.remove(key);
     }
 
-    @Override
-    public Object get(String key) {
+        public Object get(String key) {
         return Optional.ofNullable(cache.get(key)).map(SoftReference::get).filter(cacheObject -> !cacheObject.isExpired()).map(CacheObject::getValue).orElse(null);
     }
 
-    @Override
     public void clear() {
         cache.clear();
     }
 
-    @Override
     public long size() {
         return cache.entrySet().stream().filter(entry -> Optional.ofNullable(entry.getValue()).map(SoftReference::get).map(cacheObject -> !cacheObject.isExpired()).orElse(false)).count();
     }
