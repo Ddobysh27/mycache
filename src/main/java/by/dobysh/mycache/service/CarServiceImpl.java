@@ -19,7 +19,6 @@ public class CarServiceImpl implements CarService {
         this.carDAO = carDAO;
     }
 
-
     @Override
     @Transactional
     public List<Car> allCars() {
@@ -27,22 +26,32 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public void add(Car car) {
         carDAO.add(car);
     }
 
     @Override
+    @Transactional
     public void delete(Car car) {
         carDAO.delete(car);
     }
 
     @Override
+    @Transactional
     public void edit(Car car) {
         carDAO.edit(car);
     }
 
     @Override
+    @Transactional
     public Car getById(int id) {
         return carDAO.getById(id);
+    }
+
+    @Override
+    @Transactional
+    public List<Car> getByYear(int year) {
+        return carDAO.getByYear(year);
     }
 }

@@ -29,6 +29,7 @@
             <td>
                 <a href="/edit/${car.id}">edit</a>
                 <a href="/delete/${car.id}">delete</a>
+                <a href="/addCache/${car.id}">inCache</a>
             </td>
         </tr>
     </c:forEach>
@@ -37,5 +38,37 @@
 <h2>Add</h2>
 <c:url value="/add" var="add"/>
 <a href="${add}">Add new car</a>
+
+<%--<c:url value="/search" var="search"/>--%>
+<%--<form action="${search}" method="POST">--%>
+
+<%--    <label for="year">Year</label>--%>
+<%--    <input type="text" name="year" id="year">--%>
+
+<%--    <input type="submit" value="Add in cache">--%>
+<%--</form>--%>
+
+
+
+
+
+<h1>Список cars в кэше</h1>
+
+<table>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>year</th>
+    </tr>
+    <c:forEach var="car" items="${cacheCarsList}">
+        <tr>
+            <td>${car}</td>
+<%--            <td>${car.id}</td>--%>
+<%--            <td>${car.title}</td>--%>
+<%--            <td>${car.year}</td>--%>
+        </tr>
+    </c:forEach>
+</table>
+
 </body>
 </html>

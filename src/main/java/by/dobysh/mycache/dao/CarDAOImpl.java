@@ -82,4 +82,11 @@ public class CarDAOImpl implements CarDAO {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Car.class, id);
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Car> getByYear(int year) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Car where year = " + year).list();
+    }
 }

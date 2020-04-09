@@ -3,6 +3,7 @@ package by.dobysh.mycache.controller;
 import by.dobysh.mycache.model.Car;
 import by.dobysh.mycache.service.CarService;
 import by.dobysh.mycache.service.CarServiceImpl;
+import by.dobysh.mycache.service.InMemoryCacheWithDelayQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,16 +20,27 @@ public class CarController {
     private CarService carService;
 
     @Autowired
-    public void setCarDAO(CarService carService) {
+    public void setCarService(CarService carService) {
         this.carService = carService;
     }
+
+
+    private InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue;
+
+    @Autowired
+    public void setInMemoryCacheWithDelayQueue(InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue){
+        this.inMemoryCacheWithDelayQueue = inMemoryCacheWithDelayQueue;
+    }
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView allCars() {
         List<Car> cars = carService.allCars();
+        List<Car> cacheCars = inMemoryCacheWithDelayQueue.getCache();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("cars");
         modelAndView.addObject("carsList", cars);
+        modelAndView.addObject("cacheCarsList", cacheCars);
         return modelAndView;
     }
 
@@ -80,5 +92,26 @@ public class CarController {
         carService.delete(car);
         return modelAndView;
     }
+
+
+    @RequestMapping(value="/addCache/{id}", method = RequestMethod.GET)
+    public ModelAndView addCarInCache(@PathVariable("id") int id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/");
+        Car car = carService.getById(id);
+        inMemoryCacheWithDelayQueue.add(String.valueOf(car.getId()), car, 50000);
+        return modelAndView;
+    }
+
+//    @RequestMapping(value = "/search", method = RequestMethod.POST)
+//    public ModelAndView getByYear(@ModelAttribute("car") Car car) {
+//        List<Car> cacheCars = carService.getByYear(car.getYear());
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("redirect:/");
+//
+//        Car car = carService.getByYear(year);
+//
+//        return modelAndView;
+//    }
 
 }

@@ -1,6 +1,7 @@
 package by.dobysh.mycache.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cars")
@@ -38,6 +39,21 @@ public class Car {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Car)) return false;
+        Car car = (Car) o;
+        return getId() == car.getId() &&
+                getYear() == car.getYear() &&
+                Objects.equals(getTitle(), car.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getTitle(), getYear());
     }
 
     @Override

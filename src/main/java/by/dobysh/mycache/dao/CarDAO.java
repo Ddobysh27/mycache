@@ -10,4 +10,5 @@ public interface CarDAO {
     void delete(Car car);
     void edit(Car car);
     Car getById(int id);
+    List<Car> getByYear(int year);
 }
