@@ -1,7 +1,6 @@
 package by.dobysh.mycache.service;
 
 import by.dobysh.mycache.dao.CarDAO;
-import by.dobysh.mycache.dao.CarDAOImpl;
 import by.dobysh.mycache.model.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,13 @@ import java.util.List;
 
 @Service
 public class CarServiceImpl implements CarService {
+
+    private InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue;
+
+    @Autowired
+    public void setInMemoryCacheWithDelayQueue(InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue){
+        this.inMemoryCacheWithDelayQueue = inMemoryCacheWithDelayQueue;
+    }
 
     private CarDAO carDAO;
 
@@ -46,7 +52,11 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public Car getById(int id) {
-        return carDAO.getById(id);
+        Car car = inMemoryCacheWithDelayQueue.get(String.valueOf(id));
+        if (car == null){
+            return carDAO.getById(id);
+        }
+        return car;
     }
 
     @Override

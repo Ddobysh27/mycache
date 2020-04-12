@@ -15,22 +15,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 public class InMemoryCacheWithDelayQueue implements Cache {
 
-    private final ConcurrentHashMap<String, SoftReference<Car>> cache = new ConcurrentHashMap<>();
+    private final static long LIFE_TIME_CACHE = 60000;
 
-    public List getCache() {
+    private static final ConcurrentHashMap<String, SoftReference<Car>> cache = new ConcurrentHashMap<>();
 
-        List<SoftReference<Car>> list = new ArrayList<>(cache.values());
+    public List<Car> getCache() {
+
+//        List<SoftReference<Car>> list = new ArrayList<>(cache.values());
         List<Car> carsList = new ArrayList<>();
-//
-        for (SoftReference<Car> softReference: list
-             ) {
-            carsList.add(softReference.get());
 
+        for (SoftReference<Car> softReference : cache.values()
+        ) {
+            carsList.add(softReference.get());
         }
 
         return carsList;
@@ -66,6 +66,15 @@ public class InMemoryCacheWithDelayQueue implements Cache {
             cache.put(key, reference);
             cleaningUpQueue.put(new DelayedCacheObject(key, reference, expiryTime));
         }
+    }
+
+    public void add(Car c) {
+        add(String.valueOf(c.getId()), c, LIFE_TIME_CACHE); //Long.getLong(property.getProperty("lifetime")));
+    }
+
+    public void add(List<Car> cars) {
+        cars.forEach((c) -> add(String.valueOf(c.getId()), c, LIFE_TIME_CACHE)); //Long.getLong(property.getProperty("lifetime"))));
+
     }
 
     @Override

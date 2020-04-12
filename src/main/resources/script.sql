@@ -1,5 +1,6 @@
 USE test;
 
+DROP TABLE cars;
 CREATE TABLE cars
 (
     id int(10) PRIMARY KEY AUTO_INCREMENT,
