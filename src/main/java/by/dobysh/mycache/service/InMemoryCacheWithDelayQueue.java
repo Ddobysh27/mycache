@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class InMemoryCacheWithDelayQueue implements Cache {
 
-    private final static long LIFE_TIME_CACHE = 60000;
+    private final static long LIFE_TIME_CACHE = 10000;
 
-    private static final ConcurrentHashMap<String, SoftReference<Car>> cache = new ConcurrentHashMap<>();
+    private static volatile ConcurrentHashMap<String, SoftReference<Car>> cache = new ConcurrentHashMap<>();
 
     public List<Car> getCache() {
 
@@ -116,5 +116,9 @@ public class InMemoryCacheWithDelayQueue implements Cache {
         public int compareTo(Delayed o) {
             return Longs.compare(expiryTime, ((DelayedCacheObject) o).expiryTime);
         }
+    }
+
+    public long getLifeTimeCache(){
+        return LIFE_TIME_CACHE;
     }
 }

@@ -14,7 +14,7 @@ public class CarServiceImpl implements CarService {
     private InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue;
 
     @Autowired
-    public void setInMemoryCacheWithDelayQueue(InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue){
+    public void setInMemoryCacheWithDelayQueue(InMemoryCacheWithDelayQueue inMemoryCacheWithDelayQueue) {
         this.inMemoryCacheWithDelayQueue = inMemoryCacheWithDelayQueue;
     }
 
@@ -53,9 +53,10 @@ public class CarServiceImpl implements CarService {
     @Transactional
     public Car getById(int id) {
         Car car = inMemoryCacheWithDelayQueue.get(String.valueOf(id));
-        if (car == null){
-            return carDAO.getById(id);
+        if (car == null) {
+            car = carDAO.getById(id);
         }
+        inMemoryCacheWithDelayQueue.add(car);
         return car;
     }
 

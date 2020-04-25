@@ -1,7 +1,6 @@
 package by.dobysh.mycache.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.lang.ref.SoftReference;
@@ -46,7 +45,7 @@ public class InMemoryCache { // implements Cache {
         cache.remove(key);
     }
 
-        public Object get(String key) {
+    public Object get(String key) {
         return Optional.ofNullable(cache.get(key)).map(SoftReference::get).filter(cacheObject -> !cacheObject.isExpired()).map(CacheObject::getValue).orElse(null);
     }
 

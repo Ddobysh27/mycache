@@ -5,10 +5,7 @@ import by.dobysh.mycache.service.CarService;
 import by.dobysh.mycache.service.InMemoryCacheWithDelayQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -88,16 +85,16 @@ public class CarController {
     public ModelAndView addCarInCache(@PathVariable("id") int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
-        Car car = carService.getById(id);
-        inMemoryCacheWithDelayQueue.add(car);
+        carService.getById(id);
+//        inMemoryCacheWithDelayQueue.add(car);
         return modelAndView;
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public ModelAndView getByYear(@ModelAttribute("car") Car car) {
+    public ModelAndView searchById(@ModelAttribute("car") Car car) {
         //List<Car> cars = carService.getByYear(car.getYear());
-        Car cars = carService.getById(car.getId());
-        inMemoryCacheWithDelayQueue.add(cars);
+        carService.getById(car.getId());
+//        inMemoryCacheWithDelayQueue.add(c);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
 

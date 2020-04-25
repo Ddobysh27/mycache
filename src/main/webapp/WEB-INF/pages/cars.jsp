@@ -1,18 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Dima
-  Date: 08.04.2020
-  Time: 20:11
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
+<%--<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>--%>
 
 <html>
 <head>
     <title>CARS IN DATABASE</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -38,24 +32,39 @@
     </c:forEach>
 </table>
 
-<%--<h2>Add</h2>--%>
 <c:url value="/add" var="add"/>
 <a href="${add}">Add new car</a>
 
 <form:form method="post" action="/search" modelAttribute="car">
     <table>
-
-<%--        <td>Поиск по году:</td>--%>
-<%--        <td><form:input path="year" placeholder="Год" required="true"/></td>--%>
-<%--        <td colspan="3"><input type="submit" value="Search"/></td>--%>
-    <td>Поиск по ID:</td>
-    <td><form:input path="id" placeholder="ID" required="true"/></td>
-    <td colspan="3"><input type="submit" value="Search"/></td>
+        <td>Поиск по ID:</td>
+        <td><form:input path="id" placeholder="ID" required="true"/></td>
+        <td colspan="3"><input type="submit" value="Search"/></td>
     </table>
 </form:form>
 
 
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+    function doAjaxPost() {
+
+        $.ajax({
+            type: "GET",
+            url: "subView",
+            success: function (response) {
+                $("#subViewDiv").html(response);
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    var intervalId = setInterval(doAjaxPost, 100);
+</script>
+
+
 <h3>Список cars в кэше</h3>
+
 
 <table>
     <tr>
@@ -63,14 +72,8 @@
         <th>title</th>
         <th>year</th>
     </tr>
-    <c:forEach var="car" items="${cacheCarsList}">
-        <tr>
-            <td>${car.id}</td>
-            <td>${car.title}</td>
-            <td>${car.year}</td>
-        </tr>
-    </c:forEach>
-</table>
 
+</table>
+<div id="subViewDiv"></div>
 </body>
 </html>
